@@ -1,0 +1,84 @@
+/* Static content is the default. Only initialized pages opt into motion. */
+:root {
+  --story-motion-ease: cubic-bezier(.22, .61, .36, 1);
+}
+
+.motion-ready .motion-reveal {
+  --reveal-y: 0px;
+  opacity: 1;
+  translate: 0 calc(var(--reveal-y) + var(--parallax-y, 0px));
+  transition: opacity 1000ms ease, translate 1000ms ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.motion-ready .motion-reveal[data-motion-pending] {
+  --reveal-y: 24px;
+  opacity: 0;
+  will-change: opacity, translate;
+}
+
+.motion-ready [data-reveal="image"] > img,
+.motion-ready [data-reveal="image"] > picture > img {
+  transition: transform 1050ms var(--story-motion-ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.motion-ready [data-reveal="image"][data-motion-pending] > img,
+.motion-ready [data-reveal="image"][data-motion-pending] > picture > img {
+  transform: scale(1.045);
+}
+
+.motion-ready [data-parallax] {
+  translate: 0 var(--parallax-y, 0px);
+}
+
+/* The page owns the sticky visual's dimensions and responsive placement. */
+.story-motion-ready [data-story-frame] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 850ms var(--story-motion-ease), visibility 0s linear 850ms;
+}
+
+.story-motion-ready [data-story-frame].is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+
+.site-header[data-landing-header] {
+  transition: background-color 360ms ease, color 360ms ease, box-shadow 360ms ease;
+}
+
+@media (max-width: 899px) {
+  .motion-ready .motion-reveal {
+    transition-duration: 650ms;
+  }
+  .motion-ready .motion-reveal[data-motion-pending] {
+    --reveal-y: 16px;
+  }
+  .motion-ready [data-parallax] {
+    translate: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-ready .motion-reveal,
+  .motion-ready [data-parallax] {
+    opacity: 1;
+    translate: none;
+    transition: none;
+  }
+  .motion-ready [data-reveal="image"] > img,
+  .motion-ready [data-reveal="image"] > picture > img {
+    transform: none;
+    transition: none;
+  }
+  .story-motion-ready [data-story-frame],
+  .site-header[data-landing-header] {
+    transition: none;
+  }
+}

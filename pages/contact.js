@@ -1,0 +1,5 @@
+import { icon } from "../components/common.js";
+import { atelierContact } from "../components/inquiry-form.js";
+export function contactPage() {
+ return `<main id="main" tabindex="-1"><section class="contact-page shell"><p class="eyebrow">Contact the atelier</p><h1>Let’s begin<br/>with your idea.</h1><p>A look you love, a question about fit or something made personal. We’d love to hear from you.</p><div class="enquiry-destinations"><a class="button" href="${atelierContact.whatsapp}" target="_blank" rel="noopener noreferrer">Chat on WhatsApp ${icon("arrow")}</a><a class="button button-outline" href="mailto:${atelierContact.email}">Email us ${icon("arrow")}</a></div><div class="contact-note"><h2>A little help getting started?</h2><p>Choose a suggested message, edit it your way and carry your selected garment into the conversation.</p><a class="text-link" href="#/atelier">Start with a message ${icon("arrow")}</a></div><a class="text-link" href="#/collection">Explore the collection ${icon("arrow")}</a></section></main>`;
+}
