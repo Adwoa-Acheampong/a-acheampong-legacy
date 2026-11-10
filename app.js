@@ -4,10 +4,10 @@ import { collectionsPage } from "./pages/collections.js";
 import { conceptPage } from "./pages/concept.js";
 import { header } from "./components/header.js";
 import { footer } from "./components/footer.js";
-import { icon, pieceName } from "./components/common.js";
+import { icon, pieceName, responsiveSources } from "./components/common.js";
 import { bindInquiryForm } from "./components/inquiry-form.js";
 import { homePage, bindHome } from "./pages/home.js";
-import { collectionPage, resultsMarkup, selectGarments, resultCount } from "./pages/collection.js";
+import { collectionPage, defaultSort, resultsMarkup, selectGarments, resultCount } from "./pages/collection.js";
 import { detailPage } from "./pages/detail.js";
 import { legacyPage } from "./pages/legacy.js";
 import { atelierPage } from "./pages/atelier.js";
@@ -59,8 +59,21 @@ function bindGlobal() {
 }
 function bindImages() {
   document.querySelectorAll("img:not([data-error-bound])").forEach(img => { img.dataset.errorBound = "true"; img.addEventListener("error", () => {
+    const picture = img.parentElement?.closest("picture");
+    const mobileSource = picture?.querySelector('source[type="image/webp"]');
+    if (mobileSource && matchMedia(mobileSource.media).matches && img.currentSrc.includes("/assets/previews/")) {
+      mobileSource.remove();
+      return;
+    }
+    const pictureSources = picture?.querySelectorAll("source");
+    if (img.hasAttribute("srcset") || pictureSources?.length) {
+      pictureSources?.forEach(source => source.remove());
+      img.removeAttribute("srcset");
+      img.removeAttribute("sizes");
+      return;
+    }
     const message = document.createElement("span"); message.className = "media-error"; message.textContent = "Image unavailable. Open the piece for its details."; img.replaceWith(message);
-  }, { once: true }); });
+  }); });
 }
 function bindCollection(params, collection = null) {
   const form = document.querySelector("#collection-controls");
@@ -72,10 +85,10 @@ function bindCollection(params, collection = null) {
     document.querySelectorAll("[data-reset]").forEach(button => button.onclick = reset);
     bindImages();
   };
-  const reset = () => { for (const key of [...params.keys()]) params.delete(key); form.reset(); form.querySelector("input").value = ""; form.querySelector("select").value = "collection"; document.querySelector("#catalog-size").value = "all"; update(); };
+  const reset = () => { for (const key of [...params.keys()]) params.delete(key); form.reset(); form.querySelector("input").value = ""; form.querySelector("select").value = defaultSort(collection); document.querySelector("#catalog-size").value = "all"; update(); };
   form.addEventListener("submit", event => event.preventDefault());
   form.querySelector("input").addEventListener("input", event => { const value = event.target.value.trim(); value ? params.set("q", value) : params.delete("q"); update(); });
-  form.querySelector("select").addEventListener("change", event => { event.target.value === "name" ? params.set("sort", "name") : params.delete("sort"); update(); });
+  form.querySelector("select").addEventListener("change", event => { event.target.value === defaultSort(collection) ? params.delete("sort") : params.set("sort", event.target.value); update(); });
   document.querySelector("#catalog-size").addEventListener("change", event => { event.target.value === "all" ? params.delete("size") : params.set("size", event.target.value); update(); });
   document.querySelectorAll("[data-filter]").forEach(button => button.addEventListener("click", () => { button.dataset.filter === "all" ? params.delete("filter") : params.set("filter", button.dataset.filter); update(); }));
   document.querySelectorAll("[data-reset]").forEach(button => button.onclick = reset);
@@ -92,7 +105,10 @@ function bindDetail(item) {
   const explorer = bindColourExplorer(item, updateCustomLink);
   document.querySelectorAll("[data-gallery-image]").forEach(button => button.addEventListener("click", () => {
     explorer.reset();
-    main.src = button.dataset.galleryImage; zoom.src = button.dataset.galleryImage;
+    const source = button.dataset.galleryImage;
+    main.src = source;
+    main.srcset = responsiveSources(source) || "";
+    zoom.src = source;
     document.querySelectorAll("[data-gallery-image]").forEach(other => other.setAttribute("aria-pressed", String(other === button)));
   }));
   const zoomButton = document.querySelector("[data-zoom]");
@@ -120,7 +136,7 @@ function render() {
   const names = { "/": "Showroom", "/collection": "All garments", "/legacy": "Our legacy", "/atelier": "Custom atelier", "/contact": "Contact", "/bag": "Your bag", "/checkout": "Checkout", "/blog": "Stories we carry", "/design": "Design studio", "/payment": "Payment status" };
   app.innerHTML = header(path) + page + footer();
   document.title = `${item ? pieceName(item) : collection?.name || article?.title || (path === "/collections" ? "Shop by collection" : names[path]) || "Page not found"} | A Acheampong Legacy`;
-  document.querySelector('meta[name="description"]').content = article?.excerpt || (path === "/blog" ? "Stories from A Acheampong Legacy: our father–daughter heritage, the details in African wear and the beginning of a custom piece." : "Discover African wear from A Acheampong Legacy. Explore the collection and begin a personal tailoring enquiry with our family atelier.");
+  document.querySelector('meta[name="description"]').content = article?.excerpt || (path === "/blog" ? "Explore African fashion and diaspora design through the garments of A Acheampong Legacy." : "Discover African wear from A Acheampong Legacy. Explore the collection and begin a personal tailoring enquiry with our family atelier.");
   bindGlobal();
   if (path === "/") bindHome();
   if (path === "/bag") disposePage = bindBag();

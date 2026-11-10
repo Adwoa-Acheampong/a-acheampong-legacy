@@ -1,11 +1,21 @@
+import { imageVariants } from "../image-variants.js";
+
 export const escapeHTML = (value = "") => String(value).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 export const pieceName = item => item.title.replace(/^(?:Piece|Concept) \d+ — /, "").replace("Kinari", "Cream").replace("Study", "Detail");
 export const pieceNumber = item => item.title.match(/Piece \d+/)?.[0] || item.slug;
-export const image = (item, options = "") => {
+export function responsiveSources(url) {
+  return imageVariants[url]?.map(width => `/assets/previews${url.slice(7)}-${width}.webp ${width}w`).join(", ");
+}
+export function imageSource(url, sizes = "(max-width: 699px) 90vw, 600px") {
+  const sources = responsiveSources(url);
+  return `src="${escapeHTML(url)}"${sources ? ` srcset="${escapeHTML(sources)}" sizes="${escapeHTML(sizes)}"` : ""}`;
+}
+export const image = (item, options = "", sizes) => {
   const width = Number.isInteger(item.imageWidth) && item.imageWidth > 0 ? item.imageWidth : 1167;
   const height = Number.isInteger(item.imageHeight) && item.imageHeight > 0 ? item.imageHeight : 1347;
-  if (item.focus === "left" || item.focus === "right") return `<span class="paired-view paired-view-${item.focus}" style="--paired-aspect:${width/(2*height)}" role="img" aria-label="${escapeHTML(item.alt || item.caption || pieceName(item))}"><img src="${escapeHTML(item.image)}" alt="" aria-hidden="true" width="${width}" height="${height}" ${options}/></span>`;
-  return `<img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.alt)}" width="${width}" height="${height}" ${options}/>`;
+  const source = imageSource(item.image, sizes);
+  if (item.focus === "left" || item.focus === "right") return `<span class="paired-view paired-view-${item.focus}" style="--paired-aspect:${width/(2*height)}" role="img" aria-label="${escapeHTML(item.alt || item.caption || pieceName(item))}"><img ${source} alt="" aria-hidden="true" width="${width}" height="${height}" ${options}/></span>`;
+  return `<img ${source} alt="${escapeHTML(item.alt)}" width="${width}" height="${height}" ${options}/>`;
 };
 export const brandAssets = {
   tileLight: "/assets/brand/portfolio-adinkra-gold-red.png",
@@ -30,8 +40,9 @@ export function icon(name) {
   return `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.arrow}</svg>`;
 }
 export function productCard(item) {
+  const sizes = item.focus ? "(max-width: 699px) 90vw, 800px" : "(max-width: 699px) 48vw, (max-width: 1100px) 33vw, 420px";
   return `<article class="product-card" data-component="product-card"><a href="#/collection/${item.slug}">
-    <div class="product-image">${image(item, 'loading="lazy" decoding="async"')}${item.gallery?.[1] ? `<img class="product-alternate" src="${escapeHTML(item.gallery[1])}" alt="" aria-hidden="true" width="${item.imageWidth || 1167}" height="${item.imageHeight || 1347}" loading="lazy"/>` : ""}${item.isConcept ? '<span class="concept-badge">Concept design</span>' : ""}
+    <div class="product-image">${image(item, 'loading="lazy" decoding="async"', sizes)}${item.gallery?.[1] ? `<img class="product-alternate" ${imageSource(item.gallery[1], sizes)} alt="" aria-hidden="true" width="${item.imageWidth || 1167}" height="${item.imageHeight || 1347}" loading="lazy"/>` : ""}${item.isConcept ? '<span class="concept-badge">Concept design</span>' : ""}
     <span class="card-action" aria-hidden="true">View ${item.isConcept ? "concept" : "piece"} ${icon("arrow")}</span></div>
     <div class="product-label"><h3>${escapeHTML(pieceName(item))}</h3>${icon("arrow")}</div>
     <p>${escapeHTML(item.palette)}</p>${item.caption ? `<p class="product-caption">${escapeHTML(item.caption)}</p>` : ""}</a></article>`;

@@ -1,117 +1,49 @@
-import { garments } from "./catalog.js";
+import { designReferences } from "./catalog.js";
 
-const piece = slug => garments.find(item => item.slug === slug);
-const entries = [
-  {
-    slug: "the-hands-behind-the-label",
-    category: "Our family",
-    title: "The hands behind the label",
-    excerpt: "My father is Aaron Acheampong, A Acheampong Snr. His craft put me through school. I am Adwoa, A Acheampong Jnr, carrying that work into its next chapter.",
-    garment: "brown-linear",
-    heroImage: "/assets/family/adwoa-cream-coffee-original.jpeg",
-    heroAlt: "Adwoa Acheampong wearing a cream dress with coffee borders and a bird motif",
-    heroWidth: 853,
-    heroHeight: 1280,
-    caption: "Miss (Adwoa) Acheampong, A Acheampong Jnr, wearing her father’s work.",
-    introduction: "Legacy is a family story before it is a name on a label. My father, Aaron Acheampong, has spent more than thirty years making African wear. His work has clothed presidents and leaders. For me, the heart of that story is also what his craft made possible at home.",
-    sections: [
-      {
-        heading: "The life behind the clothes",
-        paragraphs: [
-          "His work sustained our household and put me through school. It helped make me the woman I am today. When I look at these clothes, I see the skill and commitment that became a source of provision for our family.",
-          "That is why the name Legacy matters to me. It holds the connection between my father’s work, the life it helped shape and the possibilities I can now pursue."
-        ]
-      },
-      {
-        heading: "What carried us",
-        paragraphs: [
-          "We give thanks to God for the strength, provision and opportunities that kept the work going. That gratitude stays with us as we look back on what his craft has made possible and turn towards what comes next."
-        ]
-      },
-      {
-        heading: "A daughter, a new chapter",
-        paragraphs: [
-          "I am Miss (Adwoa) Acheampong, now pursuing AI/ML engineering. He is A Acheampong Snr; I am A Acheampong Jnr. My path is taking shape in a different field, and I carry what his craft made possible into that next chapter.",
-          "Giving his work a home here is one way I can carry it forward. I want you to see the collection, discover the details and find something you would love to wear. His craft remains the foundation, with room for you to make these clothes part of your own story."
-        ]
-      }
-    ],
-    action: { label: "Explore the collection", href: "#/collection" },
-    supportingAction: { label: "Our family story", href: "#/legacy" }
-  },
-  {
-    slug: "look-closer-at-the-details",
-    category: "The details",
-    title: "Look closer at the details",
-    excerpt: "A line of embroidery, an offset panel, a bold print. A closer look at three designs from the collection.",
-    garment: "asymmetric-cream",
-    caption: "Asymmetric Cream, with its offset coffee and gold panel.",
-    introduction: "Sometimes, colour is the first thing you notice. Look again and another detail comes forward: the line below a neckline, the placement of a panel, or the way a print meets a plain field. Those details give you another way to find a piece you love.",
-    sections: [
-      {
-        heading: "Coffee Linework: a quiet centre line",
-        paragraphs: [
-          "On Coffee Linework, fine embroidery follows the centre opening. Warm gold stands against coffee brown, creating a clear focal point while leaving the rest of the garment understated. The interest is in the repetition of those lines."
-        ]
-      },
-      {
-        heading: "Asymmetric Cream: a different balance",
-        paragraphs: [
-          "Asymmetric Cream takes another direction. A coffee and gold panel sits away from the centre, with a chest pocket beside it. The light body gives the offset detail space to stand out.",
-          "If that panel catches your eye, open the piece and take a closer look. It is a useful starting point for a conversation about which details you would like to keep."
-        ]
-      },
-      {
-        heading: "Red Ochre: let the print speak",
-        paragraphs: [
-          "Red Ochre brings red, ochre, white and deep green together in a scroll-like print. An ochre placket gives the front a clear centre line, with a small embroidered mark adding another point of interest.",
-          "You do not need the right tailoring words to begin. Tell us which piece keeps drawing you back, or simply point to the detail you like. We can take the conversation from there."
-        ]
-      }
-    ],
-    action: { label: "View Asymmetric Cream", href: "#/collection/asymmetric-cream" },
-    supportingAction: { label: "See every piece", href: "#/collection" }
-  },
-  {
-    slug: "a-custom-piece-starts-with-a-conversation",
-    category: "The atelier",
-    title: "A custom piece starts with a conversation",
-    excerpt: "Begin with a favourite look or an idea of your own. The fit and finer details can follow when we talk.",
-    garment: "heritage-panel",
-    caption: "Heritage Panel, one possible starting point for a personal request.",
-    introduction: "You do not need a finished design brief to speak with us. A favourite piece, an occasion or an idea you have been thinking about is enough to begin. We can work through the finer details together.",
-    sections: [
-      {
-        heading: "Start with what you love",
-        paragraphs: [
-          "If a piece in the collection catches your eye, open it and choose your preferred size if you know it. You can keep a selection in your bag, or go straight to a conversation about that look. The garment reference travels with your request, so you do not have to describe it again."
-        ]
-      },
-      {
-        heading: "Make the first message your own",
-        paragraphs: [
-          "The atelier offers three simple starting points: this look in your size, a custom version, or help choosing a size. Choose the closest one and edit the message as you like.",
-          "You might want to keep a panel, explore a colour or ask whether a detail could work differently. A short note is enough. Measurements and more detailed specifications can come later in the conversation."
-        ]
-      },
-      {
-        heading: "Then we talk through the possibilities",
-        paragraphs: [
-          "All offered sizes are available across the collection. For a custom piece, we talk through fabric, fit, price and timing together. Your size choice helps us begin; measurements and final details can follow.",
-          "Prepare your message, then open email or copy it into WhatsApp to share it with us. You review and send it yourself. We will have a clear starting point for the conversation, with room to shape the rest together."
-        ]
-      }
-    ],
-    action: { label: "Discuss a custom piece", href: "#/atelier?template=custom&garment=Custom%20piece" },
-    supportingAction: { label: "Explore your idea in the design studio", href: "#/design" }
-  }
-];
+const royal = designReferences.find(item => item.slug === "igbo-kwenu-earth-weave");
+const ochre = designReferences.find(item => item.slug === "warri-poise-ochre-tux-kente-kilt");
 
-export const articles = entries.map(entry => {
-  const garment = piece(entry.garment);
-  const text = [entry.title, entry.introduction, ...entry.sections.flatMap(section => [section.heading, ...section.paragraphs])].join(" ");
-  const wordCount = text.trim().split(/\s+/).length;
-  return { ...entry, image: entry.heroImage || garment.image, imageAlt: entry.heroAlt || garment.alt, imageWidth: entry.heroWidth || 1167, imageHeight: entry.heroHeight || 1347, collectionImage: garment.image, collectionAlt: garment.alt, wordCount, minutesRead: Math.max(1, Math.ceil(wordCount / 200)), status: "local-draft" };
-});
+export const articles = [{
+  slug: "where-the-cloth-takes-us",
+  title: "Where the Cloth Takes Us",
+  category: "African fashion & diaspora",
+  minutesRead: 2,
+  excerpt: "How Royal Frequency ’84 and Ochre Tux — Kente Kilt bring Igbo dress and Ghanaian weaving into conversation with ’80s tailoring and the Scottish kilt.",
+  hero: royal,
+  introduction: "When I look at Royal Frequency ’84, my eye goes to the copper lions before I take in the wide shoulders. With Ochre Tux — Kente Kilt, I follow the blocks of colour down to the pleats. That is where these two looks begin for me. The cut catches your eye, and the cloth gives you a reason to stay with it.",
+  sections: [
+    {
+      heading: "Royal Frequency ’84",
+      look: royal,
+      caption: "Royal Frequency ’84, a concept from Igbo Kwenu. Copper lions repeat across the jacket and drape.",
+      paragraphs: [
+        "In Igbo dress in southeastern Nigeria, isi agu is a garment recognised by its repeating animal-head motifs. It is worn on occasions that bring people together, including Igbo celebrations in the diaspora. In Royal Frequency ’84, copper lions run across an oxblood jacket and continue into a draped panel. The red cap brings another familiar element of Igbo dress into view.",
+        "The ’84 in the name points to the shoulders. Their breadth and the double-breasted front recall the bold proportions of 1980s tailoring. I like how the drape interrupts the jacket’s symmetry. Follow the lions across the two surfaces and you can see the motif holding the look together."
+      ]
+    },
+    {
+      heading: "Ochre Tux — Kente Kilt",
+      look: ochre,
+      caption: "Ochre Tux — Kente Kilt, a concept from Warri Poise. The kente runs across the flat front apron and into the pleats.",
+      paragraphs: [
+        "In Warri Poise, the original Ochre Tux pairs a cream dinner jacket with a long wrapper. This version keeps the jacket and takes the lower half in a different direction. Its flat front apron and pressed pleats borrow from the Scottish kilt, while the design calls for Ghanaian kente, a strip-woven textile with distinct Asante and Ewe traditions. The ochre and burnt-orange bands sit flat at the front. Where the cloth folds, the pattern starts to disappear and return.",
+        "That change is what draws me in. The pleats give the weave a different rhythm, and the weave changes how you read the shape of the kilt. Each tradition has a visible part in the finished look."
+      ]
+    },
+    {
+      heading: "What travels with us",
+      paragraphs: [
+        "For me, the diaspora connection is in the way we dress across places. An Igbo motif can sit on a jacket cut with ’80s proportions. A cloth from Ghana can keep its character in a Scottish cut. That is what makes these looks Afrocentric for me. The African motif or cloth leads the design. I want the person wearing either piece to be able to point to a detail and tell you where it comes from, then tell you why they chose to wear it that way."
+      ]
+    }
+  ],
+  sources: [
+    { title: "Isi Agu and Igbo dress · Anambra State Government", href: "https://anambrastate.gov.ng/isi-agu-more-than-fashion-a-lasting-symbol-of-igbo-identity-and-heritage/" },
+    { title: "A 1984 suit by Kenzo · Philadelphia Museum of Art", href: "https://www.philamuseum.org/objects/91794" },
+    { title: "Traditional Ghanaian kente weaving · UNESCO", href: "https://ich.unesco.org/en/decisions/19.COM/7.B.38" },
+    { title: "Asante and Ewe weaving · The Metropolitan Museum of Art", href: "https://resources.metmuseum.org/resources/metpublications/pdf/The_Essential_Art_of_African_Textiles_Design_Without_End.pdf" },
+    { title: "Highland dress and the kilt · Scottish Tartans Museum", href: "https://scottishtartansmuseum.org/education/brief-history-of-tartan/" }
+  ]
+}];
 
 export const getArticle = slug => articles.find(article => article.slug === slug);
